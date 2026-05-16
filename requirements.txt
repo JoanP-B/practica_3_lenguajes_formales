@@ -1,0 +1,5 @@
+# Herramientas de testing
+pytest==8.1.1
+
+# Herramientas de formateo (opcional, para mantener el código limpio)
+black==24.3.0
