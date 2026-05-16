@@ -1,0 +1,1 @@
+# Script para automatizar las pruebas
