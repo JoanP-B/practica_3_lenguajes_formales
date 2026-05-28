@@ -6,6 +6,8 @@
 
 ## 👥 Team Members
 - Joan Stiven Peralta Bedoya
+-Juan Manuel Agudelo Salazar
+-Ashly Sofia Robayo Parra
 
 ---
 
