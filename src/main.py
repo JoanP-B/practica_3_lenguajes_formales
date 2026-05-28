@@ -43,19 +43,20 @@ def execute_pipeline(rules_text, state_text):
     analyzer = StaticAnalyzer(ast)
     analysis_msgs = analyzer.analyze(initial_env_copy)
     
-    # --- Formateo de Salida Canónica ---
+    # --- Formateo de Salida Canónica Estricta (Sección 2.6) ---
     output_lines = []
     
-    # Quitar los hechos que ya venían en el estado inicial si la especificación pide solo los *activados*
-    # Nota: El PDF muestra que si 'a' entra y activa 'b', la salida es b,c,d,e (no incluye 'a')
-    activated_facts = final_facts - initial_env_copy.active_facts
-    
-    if activated_facts:
-        output_lines.extend(sorted(list(activated_facts)))
+    # REQUERIMIENTO 2.6: El output consiste en el conjunto de hechos finales
+    # Nota: Mantenemos el ordenamiento lexicográfico estricto
+    output_lines.append("Output:")
+    if final_facts:
+        output_lines.extend(sorted(list(final_facts)))
     else:
         output_lines.append("(no output)")
         
+    # REQUERIMIENTO 2.6: Mensajes estáticos impresos DESPUÉS bajo la etiqueta 'Analysis:'
     if analysis_msgs:
+        output_lines.append("Analysis:")
         output_lines.extend(analysis_msgs)
         
     return "\n".join(output_lines)

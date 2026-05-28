@@ -69,19 +69,13 @@ def run_all_tests():
     for case in CASES:
         print(case["id"])
         try:
+            # Obtiene la respuesta estructurada directamente desde el pipeline central
             result = execute_pipeline(case["rules"], case["state"]).strip()
             
-            # Imprime la salida cruda calculada por tu motor
-            if "Analysis:" in result or "Output:" in result:
-                print(result)
-            else:
-                if result == "" or result == "(no output)":
-                    print("Output:\n(no output)")
-                else:
-                    print(f"Output:\n{result}")
+            # Imprime la salida cruda exacta exigida por la guía
+            print(result)
             
             # Validación interna silenciosa para el contador final
-            # Verifica si la salida contiene lo esperado para asegurar que pasó
             if case["expected_substring"] in result:
                 passed += 1
                 
@@ -90,8 +84,8 @@ def run_all_tests():
         
         print() # Separación limpia entre casos
         
-    # Mensaje técnico final sin decoraciones ruidosas
+    # Mensaje técnico final sin romper la estructura de texto
     print(f"Result: ({passed}/{len(CASES)} passed)")
-
+    
 if __name__ == "__main__":
     run_all_tests()
