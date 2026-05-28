@@ -6,72 +6,79 @@
 
 ## 👥 Team Members
 - Joan Stiven Peralta Bedoya
--Juan Manuel Agudelo Salazar
--Ashly Sofia Robayo Parra
+- Juan Manuel Agudelo Salazar
+- Ashly Sofia Robayo Parra
+
+---
+
+## 💻 Operating System
+
+- **Development OS:** Windows 11
+- All team members work in Windows 11 environment.
 
 ---
 
 ## 📖 Project Overview
 
-Este proyecto implementa un compilador para un lenguaje declarativo basado en reglas. El sistema procesa:
+This project implements a compiler for a declarative rule-based language. The system processes:
 
-- reglas en texto plano, por ejemplo: `rule r1: if temp > 30 then alert`
-- un estado inicial de variables
+- rules in plain text, for example: `rule r1: if temp > 30 then alert`
+- an initial state of variables
 
-Luego aplica una inferencia de encadenamiento hacia adelante y un algoritmo de punto fijo para deducir hechos nuevos hasta que el sistema se estabiliza.
+It then applies forward-chaining inference and a fixed-point algorithm to deduce new facts until the system stabilizes.
 
-Además, incluye un analizador estático que detecta advertencias y posibles inconsistencias en la definición de reglas.
+Additionally, it includes a static analyzer that detects warnings and possible inconsistencies in rule definitions.
 
 ---
 
-## 🏗️ Estructura del Proyecto
+## 🏗️ Project Structure
 
-### `src/P1/` - Análisis Léxico y Sintáctico
-- `lexer.py`: convierte el texto en tokens válidos, ignorando espacios y detectando palabras clave, operadores y nombres.
-- `parser_rules.py`: parser recursivo descendente que construye un AST (Abstract Syntax Tree) a partir de los tokens.
+### `src/P1/` - Lexical and Syntactic Analysis
+- `lexer.py`: converts text into valid tokens, ignoring whitespace and detecting keywords, operators, and names.
+- `parser_rules.py`: recursive descent parser that builds an AST (Abstract Syntax Tree) from tokens.
 
-### `src/P2/` - Semántica y Ejecución
-- `ast_nodes.py`: define los nodos del árbol sintáctico como `ProgramNode`, `RuleNode`, `ComparisonNode`, entre otros.
-- `interpreter.py`: implementa el motor de inferencia y el algoritmo de punto fijo para activar reglas y generar hechos.
+### `src/P2/` - Semantics and Execution
+- `ast_nodes.py`: defines syntax tree nodes such as `ProgramNode`, `RuleNode`, `ComparisonNode`, among others.
+- `interpreter.py`: implements the inference engine and fixed-point algorithm to activate rules and generate facts.
 
-### `src/P3/` - Análisis Estático
-- `analyzer.py`: recorre el AST y detecta problemas semánticos como reglas redundantes, acciones conflictivas o reglas inactivas.
+### `src/P3/` - Static Analysis
+- `analyzer.py`: traverses the AST and detects semantic issues such as redundant rules, conflicting actions, or inactive rules.
 
 ### `src/main.py`
-El módulo principal orquesta el flujo completo:
-1. lectura de archivos
-2. análisis léxico
-3. análisis sintáctico
-4. interpretación
-5. análisis estático
+The main module orchestrates the complete workflow:
+1. file reading
+2. lexical analysis
+3. syntactic analysis
+4. interpretation
+5. static analysis
 
 ### `tests/test_runner.py`
-Ejecuta las pruebas automáticas del proyecto, incluyendo casos canónicos y escenarios de inferencia en cascada.
+Runs automated project tests, including canonical cases and cascading inference scenarios.
 
 ---
 
-## 📊 Casos de Prueba
+## 📊 Test Cases
 
-Caso de prueba 2 (Encadenamiento hacia adelante básico) para entender el funcionamiento del codigo.
+Test case 2 (Basic forward chaining) to understand code functionality.
 
-| Caso | Escenario / Objetivo | Estado Inicial | Iteración 1 (Motor) | Iteración 2 (Punto Fijo) | Análisis Estático (Linter) | Salida Canónica |
+| Case | Scenario / Objective | Initial State | Iteration 1 (Engine) | Iteration 2 (Fixed-Point) | Static Analysis (Linter) | Canonical Output |
 |------|----------------------|----------------|----------------------|---------------------------|----------------------------|----------------|
-| 1 | Comparación simple | `temp = 35` | Evalúa `35 > 30` → Verdadero. Añade `alert`. | Reevalúa todo. No hay más cambios. Fin. | Ninguna anomalía detectada. | `alert` |
-| 2 | Encadenamiento en cascada | `temp = 35` | Evalúa `r1`: Verdadero → Hechos: `{alert}`. Evalúa `r2`: Falso (falta hecho). | Evalúa `r2`: `alert` ya existe → Verdadero. Hechos: `{alert, fan_on}`. Fin. | Ninguna anomalía detectada. | `alert`, `fan_on` |
-| 3 | Regla no cumplida | `temp = 20` | Evalúa `20 > 30` → Falso. Hechos vacíos. | Reevalúa todo. No hay más cambios. Fin. | Ninguna anomalía detectada. | `(no output)` |
-| 4 | Conjunción `AND` | `temp = 35` <br> `humidity = 40` | Evalúa `35 > 30 AND 40 < 50` → Ambos verdaderos. Añade `alert`. | Reevalúa todo. No hay más cambios. Fin. | Ninguna anomalía detectada. | `alert` |
-| 6 | Conflicto de acciones | `temp = 35` <br> `humidity = 40` | `r1`: Verdadero → `fan_on`. <br> `r2`: Verdadero → `fan_on`. | Reevalúa todo. No hay más cambios. Fin. | Conflicto: `r1` y `r2` generan la misma acción. | `fan_on` <br> `Action fan_on generated by r1, r2` |
-| 7 | Reglas redundantes | `(Vacío)` | No hay variables. No se dispara nada. | No hay cambios. Fin. | Redundancia: `r1` y `r2` tienen idéntica estructura. | `(no output)` <br> `Redundant rules: r1, r2` |
-| 8 | Regla inactiva | `temp = 25` <br> `humidity = 50` | `r1`, `r2`, `r3` evalúan a Falso. No se deducen hechos. | No hay cambios. Fin. | Inactividad: `humidity = 50` nunca cumplirá `< 20` (r3) de forma estática. | `(no output)` <br> `Potentially inactive rule: r3` |
+| 1 | Simple Comparison | `temp = 35` | Evaluates `35 > 30` → True. Adds `alert`. | Re-evaluates all. No more changes. End. | No anomalies detected. | `alert` |
+| 2 | Cascading Chaining | `temp = 35` | Evaluates `r1`: True → Facts: `{alert}`. Evaluates `r2`: False (missing fact). | Evaluates `r2`: `alert` already exists → True. Facts: `{alert, fan_on}`. End. | No anomalies detected. | `alert`, `fan_on` |
+| 3 | Unmet Rule | `temp = 20` | Evaluates `20 > 30` → False. Empty facts. | Re-evaluates all. No more changes. End. | No anomalies detected. | `(no output)` |
+| 4 | Conjunction `AND` | `temp = 35` <br> `humidity = 40` | Evaluates `35 > 30 AND 40 < 50` → Both true. Adds `alert`. | Re-evaluates all. No more changes. End. | No anomalies detected. | `alert` |
+| 6 | Action Conflict | `temp = 35` <br> `humidity = 40` | `r1`: True → `fan_on`. <br> `r2`: True → `fan_on`. | Re-evaluates all. No more changes. End. | Conflict: `r1` and `r2` generate same action. | `fan_on` <br> `Action fan_on generated by r1, r2` |
+| 7 | Redundant Rules | `(Empty)` | No variables. Nothing fires. | No changes. End. | Redundancy: `r1` and `r2` have identical structure. | `(no output)` <br> `Redundant rules: r1, r2` |
+| 8 | Inactive Rule | `temp = 25` <br> `humidity = 50` | `r1`, `r2`, `r3` evaluate to False. No facts deduced. | No changes. End. | Inactivity: `humidity = 50` will never satisfy `< 20` (r3) statically. | `(no output)` <br> `Potentially inactive rule: r3` |
 
 ---
 
-## 🚀 Instalación y uso
+## 🚀 Installation and Usage
 
-### Requisitos
-- Python 3.10 o superior
+### Requirements
+- Python 3.10 or higher
 
-### Ejecutar pruebas
+### Run Tests
 
 ```bash
 pip install -r requirements.txt
@@ -79,7 +86,7 @@ pip install -r requirements.txt
 python -m tests.test_runner
 ```
 
-### Ejecutar el programa con archivos propios
+### Run the Program with Custom Files
 
 ```bash
 python -m src.main path/to/rules.txt path/to/state.txt
@@ -87,31 +94,31 @@ python -m src.main path/to/rules.txt path/to/state.txt
 
 ---
 
-## 📌 Formato de salida
+## 📌 Output Format
 
-El programa imprime dos secciones:
+The program prints two sections:
 
-1. **Hechos activos**
-   - Cada hecho deducido se muestra en una línea.
-   - La salida se ordena alfabéticamente.
-   - Si no se deduce ningún hecho, muestra `(no output)`.
+1. **Active Facts**
+   - Each deduced fact is displayed on a line.
+   - Output is sorted alphabetically.
+   - If no facts are deduced, displays `(no output)`.
 
-2. **Advertencias del analizador**
-   - Reglas redundantes.
-   - Acciones duplicadas por reglas distintas.
-   - Reglas potencialmente inactivas.
-
----
-
-## 💡 Notas importantes
-
-- El analizador estático ayuda a identificar errores antes o después de la ejecución.
-- La separación en módulos facilita el mantenimiento y la ampliación del sistema.
-- El motor de inferencia usa iteraciones hasta alcanzar un punto fijo, siguiendo la teoría de lenguajes formales.
+2. **Analyzer Warnings**
+   - Redundant rules.
+   - Duplicate actions from different rules.
+   - Potentially inactive rules.
 
 ---
 
-## 📚 Referencias
+## 💡 Important Notes
+
+- The static analyzer helps identify errors before or after execution.
+- Separation into modules facilitates maintenance and system expansion.
+- The inference engine uses iterations until reaching a fixed point, following formal language theory.
+
+---
+
+## 📚 References
 - Aho, A. V., Lam, M. S., Sethi, R., & Ullman, J. D. (2006). *Compilers: Principles, Techniques, and Tools* (2nd ed.). Pearson.
 - Python Software Foundation. (2026). *re — Regular expression operations*. Python 3 Documentation.
 
